@@ -13,6 +13,8 @@ module Todoable
     end
 
     def add_item(item)
+      raise ArgumentError if item.class != ListItem
+      # TODO: call API duh
       @items << item
     end
 

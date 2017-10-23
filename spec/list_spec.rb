@@ -31,6 +31,8 @@ describe Todoable::List do
       it "includes the list items in the found list" do
         list = Todoable::List.find(list_id)
         expect(list.items).to be_an Array
+        expect(list.items).to all be_a Todoable::ListItem
+
       end
     end
 
@@ -62,12 +64,16 @@ describe Todoable::List do
       end
 
       describe "#destroy" do
+        xit "destroys the list and list items" do
+
+
+        end
 
       end
 
       describe "#add_item" do
         it "increases the number of list items by one" do
-          item = {name: "implement list item"}
+          item = Todoable::ListItem.new(name: "Implement ListItem")
           count = list.items.count
           list.add_item(item)
           expect(list.items.count).to eq(count + 1)
