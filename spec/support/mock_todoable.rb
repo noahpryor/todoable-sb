@@ -10,6 +10,24 @@ class MockTodoable < Sinatra::Base
     { token: "a-valid-token" }.to_json
   end
 
+  get '/api/lists' do
+    json_response(200, 'get_lists.json')
+  end
+
+  get '/api/lists/:list_id' do
+    json_response(200, 'get_list.json')
+  end
+
+  post '/api/lists' do
+    status 201
+    response.headers['Location'] = "http://todoable.teachable.tech/api/lists/this-is-a-list-id"
+  end
+
+  patch '/api/lists/:id' do
+    status 201
+    response.headers['Location'] = "http://todoable.teachable.tech/api/lists/this-is-a-list-id"
+  end
+
   private
 
   def json_response(response_code, file_name)
