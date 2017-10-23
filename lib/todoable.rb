@@ -1,8 +1,8 @@
 require "todoable/version"
-require "todoable/client"
-require "todoable/list"
-require "todoable/list_item"
 
 module Todoable
-
+  autoload :Client, "todoable/client"
+  autoload :Api, "todoable/api"
+  autoload :List, "todoable/list"
+  autoload :ListItem, "todoable/list_item"
 end

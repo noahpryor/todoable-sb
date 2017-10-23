@@ -23,13 +23,8 @@ module Todoable
       }
     end
 
-    def finish
-      #TODO: call API
-      @status = :finished
-    end
-
-    def destroy
-      #TODO: implement this
+    def persisted
+      !!id && !!list_id
     end
 
   end

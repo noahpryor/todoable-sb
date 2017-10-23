@@ -1,84 +1,36 @@
 require 'spec_helper'
 
 describe Todoable::List do
+  context "given an initialized but not persisted List" do
+    let (:name) { "Urgent Things" }
+    let (:item) { Todoable::List.new(name: name)}
 
-  describe "::all" do
-    it "returns an array of lists" do
-      lists = Todoable::List.all
-      expect(lists).to be_an Array
-      expect(lists).to all be_a Todoable::List
-    end
-  end
+    let (:json_body) {
+      {
+        "item": {
+          "name": name
+        }
+      }
+    }
 
-  describe "::create" do
-    it "creates a list with a name attribute" do
-      name = "My New List"
-      list = Todoable::List::create(name: name)
-      expect(list.class).to eq Todoable::List
-      expect(list.name).to eq name
-    end
-  end
-
-  describe "::find" do
-    context "given a valid list ID" do
-      let (:list_id) {"this-is-a-list-id"}
-
-      it "finds the proper list" do
-        list = Todoable::List.find(list_id)
-        expect(list.id).to eq(list_id)
-      end
-
-      it "includes the list items in the found list" do
-        list = Todoable::List.find(list_id)
-        expect(list.items).to be_an Array
-        expect(list.items).to all be_a Todoable::ListItem
-
+    describe "#as_json" do
+      it "serializes to the expected format for adding to list" do
+        expect(item.as_json).to eq(json_body)
       end
     end
 
-    context "given an invalid list ID" do
+    describe "#persisted" do
+      let (:item) { Todoable::List.new(name: "Save this!") }
 
-      xit "raises a Todoable::NotFound error" do
+      it "returns true when an id and list id are present" do
+        item.id = 'todo-able-list-uuid'
+        expect(item.persisted).to eq(true)
+      end
 
+      it "returns false when an id and list id are not present" do
+        expect(item.persisted).to eq(false)
       end
     end
 
-    context "with an instantiated List instance" do
-      let (:id) { 'this-is-a-list-id' }
-      let (:name) { 'Urgent Things' }
-      let (:items) { [] }
-
-      let (:list) { Todoable::List.new(
-        id: id,
-        name: name,
-        items: items
-      )}
-
-      describe "#update" do
-        it "updates the list name" do
-          new_name = "Stranger Things"
-          list.update(name: new_name)
-          expect(list.name).to eq(new_name)
-        end
-
-      end
-
-      describe "#destroy" do
-        xit "destroys the list and list items" do
-
-
-        end
-
-      end
-
-      describe "#add_item" do
-        it "increases the number of list items by one" do
-          item = Todoable::ListItem.new(name: "Implement ListItem")
-          count = list.items.count
-          list.add_item(item)
-          expect(list.items.count).to eq(count + 1)
-        end
-      end
-    end
   end
 end

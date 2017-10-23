@@ -28,6 +28,23 @@ class MockTodoable < Sinatra::Base
     response.headers['Location'] = "http://todoable.teachable.tech/api/lists/this-is-a-list-id"
   end
 
+  delete '/api/lists/:id' do
+    status 204
+  end
+
+  post '/api/lists/:id/items' do
+    status 201
+    response.headers['Location'] = "http://todoable.teachable.tech/api/lists/this-is-a-list-id/items/this-is-a-list-item-id"
+  end
+
+  put '/api/lists/:id/items/:item_id/finish' do
+    status 200
+  end
+
+  delete '/api/lists/:list_id/items/:id' do
+    status 204
+  end
+
   private
 
   def json_response(response_code, file_name)

@@ -1,11 +1,19 @@
 require 'spec_helper'
 
 describe Todoable::ListItem do
+  let (:name) { "Feed the cat" }
+  let (:item) { Todoable::ListItem.new(name: name)}
+  let (:json_body) {
+    {
+      "item": {
+        "name": name
+      }
+    }
+  }
 
   describe "::new" do
 
     context "given an item name" do
-      let(:name) { "Implement this class" }
       it "returns a list item with a name" do
         item = Todoable::ListItem.new(name: name)
         expect(item).to be_a(Todoable::ListItem)
@@ -14,60 +22,59 @@ describe Todoable::ListItem do
     end
 
     context "without an item name" do
-
-      xit "does not make an API call" do
-
-
-      end
-
       it "raises an error" do
         expect{ Todoable::ListItem.new() }.to raise_error(ArgumentError)
       end
     end
   end
 
-  context "given an initialized but not saved ListItem" do
-    let (:name) { "Feed the cat" }
-    let (:item) { Todoable::ListItem.new(name: name)}
-    let (:json_body) {
-      {
-        "item": {
-          "name": name
-        }
-      }
-    }
+  describe "::build_from_response" do
 
-    describe "#as_json" do
-      it "serializes to the expected format for adding to list" do
-        expect(item.as_json).to eq(json_body)
+    context "provided the expected json" do
+
+      let (:status) { :todo }
+      let (:list_id) { "todo-able-list-uuid" }
+      let (:name) { "Urgent Things" }
+      let (:id) { 'todo-able-list-item-uuid'}
+      let (:item) {
+        Todoable::ListItem.build_from_response(id: id, list_id: list_id, name: name, status: status)
+      }
+
+      it "returns a list item with a name" do
+        expect(item.name).to eq(name)
+      end
+
+      it "returns a list item with a list id" do
+        expect(item.list_id).to eq(list_id)
+      end
+
+      it "returns a list item with an id" do
+        expect(item.id).to eq(id)
+      end
+
+      it "returns a list item with a status" do
+        expect(item.status).to eq(status)
       end
     end
   end
 
-  context "given a persisted ListItem" do
-    let (:name) { "Feed the cat" }
-    let (:id) { "list-item-uuid" }
-    let (:list_id) { "list-uuid" }
-    let (:item) { Todoable::ListItem.new(name: name)}
+  describe "#as_json" do
+    it "serializes to the expected format for adding to list" do
+      expect(item.as_json).to eq(json_body)
+    end
+  end
 
-    before do
-      item.id = id
-      item.list_id = list_id
+  describe "#persisted" do
+    let (:item) { Todoable::ListItem.new(name: "Save this!") }
+
+    it "returns true when an id and list id are present" do
+      item.id = 'todo-able-list-item-uuid'
+      item.list_id = 'todo-able-list-uuid'
+      expect(item.persisted).to eq(true)
     end
 
-    describe "#delete" do
-
-      xit "deletes the item from the list" do
-
-      end
-    end
-
-    describe "#finish" do
-      it "marks the item as finished" do
-        item.finish
-        expect(item.status).to eq(:finished)
-      end
-
+    it "returns false when an id and list id are not present" do
+      expect(item.persisted).to eq(false)
     end
   end
 end
