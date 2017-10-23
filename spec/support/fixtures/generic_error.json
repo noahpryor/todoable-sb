@@ -1,0 +1,6 @@
+{
+  "errors": {
+    "name": ["missing"],
+    "email": ["invalid_format"],
+  }
+}
