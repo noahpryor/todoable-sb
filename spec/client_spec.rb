@@ -20,13 +20,19 @@ describe Todoable::Client do
     end
 
     context "with an initialized client" do
-
-      let (:client) { Todoable::Client.new(username: username, password: password)}
+      let (:auth_hash) { { username: username, password: password } }
+      let (:client) { Todoable::Client.new(auth_hash)}
 
       describe "#authenticate" do
 
-        xit "calls the authenticate endpoint" do
+        it "calls the authenticate endpoint" do
+          endpoint = "/authenticate"
+          options = {basic_auth: auth_hash}
 
+          expect(client.class).to receive(:post)
+                                  .with(endpoint, options)
+                                  .and_call_original
+          client.authenticate
         end
 
         context "receives a successful response" do
@@ -37,13 +43,17 @@ describe Todoable::Client do
           end
         end
 
-        context "receives an error" do
+        context "receives an error from the API" do
+          before do
+            stub_request(:post, /authenticate/).
+            to_return(status: 429)
+          end
 
+          it "raises a Todoable::AuthenticationError" do
+            expect{ client.authenticate }.to raise_error(Todoable::AuthenticationError)
+          end
         end
       end
-
-
-
     end
 
     describe "::build" do
@@ -64,10 +74,6 @@ describe Todoable::Client do
         expect(client).to receive(:authenticate).once
         Todoable::Client.build(username: username, password: password)
       end
-
-
     end
-
   end
-
 end

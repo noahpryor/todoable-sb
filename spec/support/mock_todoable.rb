@@ -4,7 +4,11 @@ require 'sinatra/base'
 
 class MockTodoable < Sinatra::Base
 
-  
+  post '/api/authenticate' do
+    content_type :json
+    status 200
+    { token: "a-valid-token" }.to_json
+  end
 
   private
 
