@@ -31,29 +31,17 @@ module Todoable
 
       def create_list(name: )
         list = Todoable::List.new(name: name)
-        save_list(list: list)
-      end
-
-      def save_list(list: )
-        raise ArgumentError unless list.is_a?(Todoable::List)
         response = self.class.post('/lists', body: list.post_body, headers: headers)
         check_and_raise_errors(response)
         id = response.headers['Location'].split("/").last
         Todoable::List.build_from_response(id: id, name: list.name, items: [])
       end
 
-      def update(list: , name: )
-        raise ArgumentError unless list.is_a?(Todoable::List) && list.persisted
-        response = self.class.patch("/lists/#{list.id}", body: list.post_body, headers: headers)
+      def update(list_id: , name: )
+        list = Todoable::List.new(name: name)
+        response = self.class.patch("/lists/#{list_id}", body: list.post_body, headers: headers)
         check_and_raise_errors(response)
-
-        # HACK
-        begin
-          id = response.headers['Location'].split("/").last
-        rescue
-          id = "todoable-missing-location-header"
-        end
-        # TODO: I'm not seeing a location header on list response
+        id = response.headers['Location'].split("/").last
         list.name = name
         return list
       end
