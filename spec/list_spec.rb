@@ -6,7 +6,7 @@ describe Todoable::List do
 
   let (:json_body) {
     {
-      "item": {
+      "list": {
         "name": name
       }
     }

@@ -16,7 +16,7 @@ module Todoable
 
     def post_body
       {
-        "item": {
+        "list": {
           "name": name
         }
       }.to_json

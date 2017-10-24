@@ -38,12 +38,7 @@ module Todoable
         raise ArgumentError unless list.is_a?(Todoable::List)
         response = self.class.post('/lists', body: list.post_body, headers: headers)
         check_and_raise_errors(response)
-        begin
-          id = response.headers['Location'].split("/").last
-        rescue
-          id = "todoable-missing-location-header"
-        end
-        # TODO: I'm not seeing a location header on list creation
+        id = response.headers['Location'].split("/").last
         Todoable::List.build_from_response(id: id, name: list.name, items: [])
       end
 
