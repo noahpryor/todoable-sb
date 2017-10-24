@@ -14,7 +14,7 @@ module Todoable
       def find_list(id)
         response = self.class.get("/lists/#{id}", {headers: headers})
         check_and_raise_errors(response)
-        attributes = response.parsed_response["list"]
+        attributes = response.parsed_response
 
         items = attributes["items"].map do |item_json|
           item_id = item_json["src"].split("/").last # HACK
