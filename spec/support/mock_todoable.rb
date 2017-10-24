@@ -3,11 +3,10 @@
 require 'sinatra/base'
 
 class MockTodoable < Sinatra::Base
-
   post '/api/authenticate' do
     content_type :json
     status 200
-    { token: "a-valid-token" }.to_json
+    { token: 'a-valid-token' }.to_json
   end
 
   get '/api/lists' do
@@ -20,12 +19,12 @@ class MockTodoable < Sinatra::Base
 
   post '/api/lists' do
     status 201
-    response.headers['Location'] = "http://todoable.teachable.tech/api/lists/this-is-a-list-id"
+    response.headers['Location'] = 'http://todoable.teachable.tech/api/lists/this-is-a-list-id'
   end
 
   patch '/api/lists/:id' do
     status 201
-    response.headers['Location'] = "http://todoable.teachable.tech/api/lists/this-is-a-list-id"
+    response.headers['Location'] = 'http://todoable.teachable.tech/api/lists/this-is-a-list-id'
   end
 
   delete '/api/lists/:id' do
@@ -34,7 +33,7 @@ class MockTodoable < Sinatra::Base
 
   post '/api/lists/:id/items' do
     status 201
-    response.headers['Location'] = "http://todoable.teachable.tech/api/lists/this-is-a-list-id/items/this-is-a-list-item-id"
+    response.headers['Location'] = 'http://todoable.teachable.tech/api/lists/this-is-a-list-id/items/this-is-a-list-item-id'
   end
 
   put '/api/lists/:id/items/:item_id/finish' do
