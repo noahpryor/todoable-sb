@@ -7,11 +7,7 @@ module Todoable
         response = self.class.post("/lists/#{list_id}/items", body: item.post_body, headers: headers)
         check_and_raise_errors(response)
         item.list_id = list_id
-        begin
-          id = response.headers['Location'].split("/").last
-        rescue
-          id =  "todoable-missing-location-header"
-        end
+        id = response.headers['Location'].split("/").last
         item.id = id
         return item
       end
