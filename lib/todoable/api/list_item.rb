@@ -32,6 +32,12 @@ module Todoable
         return list
       end
 
+      def finish(id: , list_id: )
+        response = self.class.put("/lists/#{list_id}/items/#{id}/finish", headers: headers)
+        check_and_raise_errors(response)
+        return true
+      end
+
       def finish_item(item: )
         raise ArgumentError unless item.is_a?(Todoable::ListItem) && item.persisted
         response = self.class.put("/lists/#{item.list_id}/items/#{item.id}/finish", headers: headers)

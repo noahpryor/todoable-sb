@@ -140,6 +140,77 @@ describe Todoable::Api::ListItem do
       end
     end
 
+    describe "#finish" do
+      let (:id) { "todo-able-list-item-uuid" }
+      let (:list_id) { "todo-able-list-uuid" }
+
+      context "without a list id" do
+        it "raises an ArgumentError" do
+          expect{ client.finish(id: id) }.to raise_error(ArgumentError)
+        end
+      end
+
+      context "without an item id" do
+        it "raises an ArgumentError" do
+          expect{ client.finish(list_id: list_id) }.to raise_error(ArgumentError)
+        end
+      end
+
+      context "with invalid IDs" do
+        before do
+          stub_request(:put, /lists/).
+            to_return(status: 404)
+        end
+
+        context "with an invalid list id" do
+          it "raisea a ContentNotFoundError" do
+            expect{
+              client.finish(id: id, list_id: list_id)
+            }.to raise_error(Todoable::ContentNotFoundError)
+          end
+        end
+
+        context "with an invalid item id" do
+          it "raisea a ContentNotFoundError" do
+            expect{
+              client.finish(id: id, list_id: list_id)
+            }.to raise_error(Todoable::ContentNotFoundError)
+          end
+        end
+      end
+
+      context "with valid IDs" do
+
+        it "puts to the list items finish endpoint" do
+          endpoint = "/lists/#{list_id}/items/#{id}/finish"
+
+          expect(client.class).to receive(:put)
+                                  .with(endpoint, Hash)
+                                  .and_call_original
+          client.finish(id: id, list_id: list_id)
+        end
+
+        context "and receives a valid response" do
+          it "returns true" do
+            result = client.finish(id: id, list_id: list_id)
+            expect(result).to eq(true)
+          end
+        end
+
+        context "and receives an unauthorized response" do
+          before do
+            stub_request(:put, /lists\//).
+            to_return(status: 401)
+          end
+
+          it "raises a Todoable::Unauthorized error" do
+            expect {  client.finish(id: id, list_id: list_id) }.to raise_error(Todoable::UnauthorizedError)
+          end
+        end
+      end
+
+    end
+
     describe "#finish_item" do
       context "with a not yet persisted item" do
         let (:item) { Todoable::ListItem.new(name: "Save this todo") }
