@@ -30,7 +30,7 @@ module Todoable
       {
         id: @id,
         name: @name,
-        items: @items,
+        items: @items.map(&:attributes),
       }
     end
   end

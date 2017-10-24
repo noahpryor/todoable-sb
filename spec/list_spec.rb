@@ -82,7 +82,7 @@ describe Todoable::List do
         {
           id: list_id,
           name: list_name,
-          items: [item]
+          items: [item.attributes]
         }
       )
     end
