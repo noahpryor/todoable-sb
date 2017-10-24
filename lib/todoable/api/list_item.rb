@@ -7,7 +7,11 @@ module Todoable
         response = self.class.post("/lists/#{list_id}/items", body: item.as_json, headers: headers)
         check_and_raise_errors(response)
         item.list_id = list_id
-        id = response.headers['Location'].split("/").last
+        begin
+          id = response.headers['Location'].split("/").last
+        rescue
+          id =  "todoable-missing-location-header"
+        end
         item.id = id
         return item
       end
@@ -17,7 +21,11 @@ module Todoable
           item.is_a?(Todoable::ListItem)
         response = self.class.post("/lists/#{list.id}/items", body: item.as_json, headers: headers)
         check_and_raise_errors(response)
-        id = response.headers['Location'].split("/").last
+        begin
+          id = response.headers['Location'].split("/").last
+        rescue
+          id = "todoable-missing-location-header"
+        end
         item.id = id
         item.list_id = list.id
         list.items << item

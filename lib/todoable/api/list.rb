@@ -38,7 +38,11 @@ module Todoable
         raise ArgumentError unless list.is_a?(Todoable::List)
         response = self.class.post('/lists', body: list.as_json, headers: headers)
         check_and_raise_errors(response)
-        id = response.headers['Location'].split("/").last
+        begin
+          id = response.headers['Location'].split("/").last
+        rescue
+          id = "todoable-missing-location-header"
+        end
         # TODO: I'm not seeing a location header on list creation
         Todoable::List.build_from_response(id: id, name: list.name, items: [])
       end
@@ -47,7 +51,13 @@ module Todoable
         raise ArgumentError unless list.is_a?(Todoable::List) && list.persisted
         response = self.class.patch("/lists/#{list.id}", body: list.as_json, headers: headers)
         check_and_raise_errors(response)
-        id = response.headers['Location'].split("/").last
+
+        # HACK
+        begin
+          id = response.headers['Location'].split("/").last
+        rescue
+          id = "todoable-missing-location-header"
+        end
         # TODO: I'm not seeing a location header on list response
         list.name = name
         return list
