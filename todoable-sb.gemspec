@@ -25,5 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "webmock", "~> 3.1.0"
   spec.add_development_dependency "sinatra", "~> 2.0.0"
   spec.add_development_dependency "simplecov", "~> 0.15.1"
+  spec.add_development_dependency "coveralls"
   spec.add_dependency "httparty", "~> 0.15.6"
 end

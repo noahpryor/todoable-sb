@@ -1,8 +1,7 @@
-# Todoable::Sb
+# Todoable
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/todoable/sb`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+[![Coverage Status](https://coveralls.io/repos/github/sbauch/todoable-sb/badge.svg?branch=coverage-style-docs)](https://coveralls.io/github/sbauch/todoable-sb?branch=coverage-style-docs)
+[![Maintainability](https://api.codeclimate.com/v1/badges/f6bc5108df42ab0df74c/maintainability)](https://codeclimate.com/github/sbauch/todoable-sb/maintainability)
 
 ## Installation
 
