@@ -41,8 +41,12 @@ module Todoable
         list = Todoable::List.new(name: name)
         response = self.class.patch("/lists/#{list_id}", body: list.post_body, headers: headers, format: :text)
         check_and_raise_errors(response)
-        list.name = name
-        return list
+        # This endpoint returns a plaintext body: "<new name> updated", so
+        # while I'd like to return a List with ListItems, that would require
+        # first looking up the list which isn't ideal. So we'll return true, ask
+        # todoable to fix this endpoint, and make developers keep track of the
+        # name change
+        return true
       end
 
       def delete_list(id: )

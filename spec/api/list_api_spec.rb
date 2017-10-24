@@ -153,19 +153,6 @@ describe Todoable::Api::List do
 
       context "with a new name " do
 
-        # let (:items) { [
-        #     Todoable::ListItem.build_from_response(
-        #       id: 'id1', list_id: id, name: 'first', status: :todo
-        #     ),
-        #     Todoable::ListItem.build_from_response(
-        #       id: 'id2', list_id: id, name: 'second', status: :todo
-        #     ),
-        #   ]
-        # }
-        # let (:list) {
-        #   Todoable::List.build_from_response(id: id, name: "Urgent Things", items: items)
-        # }
-
         it "patches to the list endpoint" do
           endpoint = "/lists/#{id}"
 
@@ -176,14 +163,22 @@ describe Todoable::Api::List do
         end
 
         context "and receives a valid response" do
-          it "returns a single Todoable:List" do
+
+          # Ideally these tests would apply, but the API returns a plaintext
+          # response rather than json
+          xit "returns a single Todoable:List" do
             updated_list = client.update(list_id: id, name: name)
             expect(updated_list).to be_a Todoable::List
           end
 
-          it "has the updated list name" do
+          xit "has the updated list name" do
             updated_list = client.update(list_id: id, name: name)
             expect(updated_list.name).to eq(name)
+          end
+
+          it "returns true" do
+            response = client.update(list_id: id, name: name)
+            expect(response).to eq(true)
           end
         end
 
