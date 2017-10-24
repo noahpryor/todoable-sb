@@ -46,6 +46,12 @@ module Todoable
         return item
       end
 
+      def delete(id: , list_id: )
+        response = self.class.delete("/lists/#{list_id}/items/#{id}", headers: headers)
+        check_and_raise_errors(response)
+        return true
+      end
+
       def delete_item(item: )
         raise ArgumentError unless item.is_a?(Todoable::ListItem) && item.persisted
         response = self.class.delete("/lists/#{item.list_id}/items/#{item.id}", headers: headers)
