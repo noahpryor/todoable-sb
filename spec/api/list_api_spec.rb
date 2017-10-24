@@ -251,17 +251,17 @@ describe Todoable::Api::List do
       end
     end
 
-    describe "#delete" do
+    describe "#delete_list" do
       context "without a list" do
         it "raises an ArgumentError" do
-          expect{ client.delete() }.to raise_error(ArgumentError)
+          expect{ client.delete_list() }.to raise_error(ArgumentError)
         end
       end
 
       context "without a non-persisted list" do
         let (:list) { Todoable::List.new(name: "Save Me Plz") }
         it "raises an ArgumentError" do
-          expect{ client.delete(list: list)}.to raise_error(ArgumentError)
+          expect{ client.delete_list(list: list)}.to raise_error(ArgumentError)
         end
       end
 
@@ -286,12 +286,12 @@ describe Todoable::Api::List do
           expect(client.class).to receive(:delete)
                                   .with(endpoint, Hash)
                                   .and_call_original
-          client.delete(list: list)
+          client.delete_list(list: list)
         end
 
         context "and receives a valid response" do
           it "returns true" do
-            response = client.delete(list: list)
+            response = client.delete_list(list: list)
             expect(response).to eq(true)
           end
         end
@@ -303,7 +303,7 @@ describe Todoable::Api::List do
           end
 
           it "raises a Todoable::Unauthorized error" do
-            expect { client.delete(list: list) }.to raise_error(Todoable::UnauthorizedError)
+            expect { client.delete_list(list: list) }.to raise_error(Todoable::UnauthorizedError)
           end
         end
       end
