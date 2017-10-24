@@ -36,7 +36,7 @@ module Todoable
 
       def save_list(list: )
         raise ArgumentError unless list.is_a?(Todoable::List)
-        response = self.class.post('/lists', body: list.as_json, headers: headers)
+        response = self.class.post('/lists', body: list.post_body, headers: headers)
         check_and_raise_errors(response)
         begin
           id = response.headers['Location'].split("/").last
@@ -49,7 +49,7 @@ module Todoable
 
       def update(list: , name: )
         raise ArgumentError unless list.is_a?(Todoable::List) && list.persisted
-        response = self.class.patch("/lists/#{list.id}", body: list.as_json, headers: headers)
+        response = self.class.patch("/lists/#{list.id}", body: list.post_body, headers: headers)
         check_and_raise_errors(response)
 
         # HACK

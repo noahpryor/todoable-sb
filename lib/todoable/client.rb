@@ -42,7 +42,7 @@ module Todoable
       new(username: username, password: password).authenticate
     end
 
-    private
+    # private
 
     def check_and_raise_errors(response)
       case response.code.to_i
@@ -50,6 +50,8 @@ module Todoable
         raise ContentNotFoundError
       when 400...500
         raise UnauthorizedError
+      when 500
+        puts response
       end
     end
 

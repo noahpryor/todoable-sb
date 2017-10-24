@@ -4,7 +4,7 @@ module Todoable
 
       def create_item(list_id: , name: )
         item = Todoable::ListItem.new(name: name)
-        response = self.class.post("/lists/#{list_id}/items", body: item.as_json, headers: headers)
+        response = self.class.post("/lists/#{list_id}/items", body: item.post_body, headers: headers)
         check_and_raise_errors(response)
         item.list_id = list_id
         begin
@@ -19,7 +19,7 @@ module Todoable
       def add_item(list: , item: )
         raise ArgumentError unless list.is_a?(Todoable::List) &&
           item.is_a?(Todoable::ListItem)
-        response = self.class.post("/lists/#{list.id}/items", body: item.as_json, headers: headers)
+        response = self.class.post("/lists/#{list.id}/items", body: item.post_body, headers: headers)
         check_and_raise_errors(response)
         begin
           id = response.headers['Location'].split("/").last

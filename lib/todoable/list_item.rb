@@ -15,16 +15,25 @@ module Todoable
       item
     end
 
-    def as_json
+    def post_body
       {
         "item": {
           "name": name
         }
-      }
+      }.to_json
     end
 
     def persisted
       !!id && !!list_id
+    end
+
+    def attributes
+      {
+        id: @id,
+        name: @name,
+        status: @status,
+        list_id: @list_id
+      }
     end
 
   end

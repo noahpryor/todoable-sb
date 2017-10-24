@@ -58,9 +58,9 @@ describe Todoable::ListItem do
     end
   end
 
-  describe "#as_json" do
+  describe "#post_body" do
     it "serializes to the expected format for adding to list" do
-      expect(item.as_json).to eq(json_body)
+      expect(item.post_body).to eq(json_body.to_json)
     end
   end
 
@@ -75,6 +75,27 @@ describe Todoable::ListItem do
 
     it "returns false when an id and list id are not present" do
       expect(item.persisted).to eq(false)
+    end
+  end
+
+  describe "#attributes" do
+    let (:status) { :todo }
+    let (:list_id) { "todo-able-list-uuid" }
+    let (:name) {"Binge season 2"}
+    let (:id) { 'todo-able-list-item-uuid'}
+    let (:item) {
+      Todoable::ListItem.build_from_response(id: id, list_id: list_id, name: name, status: status)
+    }
+
+    it "returns the expected attributes" do
+      expect(item.attributes).to eq(
+        {
+          id: id,
+          name: name,
+          status: status,
+          list_id: list_id
+        }
+      )
     end
   end
 end
