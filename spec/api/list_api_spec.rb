@@ -87,37 +87,15 @@ describe Todoable::Api::List do
     end
 
     describe "#create_list" do
-      let (:list_id) { "todo-able-list-uuid"}
       let (:name) { "New List" }
-
-      context "without a list_id" do
-        it "raises an ArgumentError" do
-          expect{client.create_list(name: name)}.to raise_error(ArgumentError)
-        end
-      end
 
       context "without a name" do
         it "raises an ArgumentError" do
-          expect{ client.create_list(list_id: list_id) }.to raise_error(ArgumentError)
+          expect{ client.create_list() }.to raise_error(ArgumentError)
         end
       end
 
-      context "with an invalid list_id" do
-
-        before do
-          stub_request(:post, /lists/).
-          to_return(status: 404)
-        end
-
-        it "raises a ContentNotFoundError error" do
-          expect{ client.create_list(
-            list_id: list_id, name: name
-          )}.to raise_error(Todoable::ContentNotFoundError)
-        end
-
-      end
-
-      context "with a valid list_id and name" do
+      context "with a name" do
         let (:list) { Todoable::List.new(name: name) }
 
         it "calls #save_list with a Todoable::List" do
@@ -125,7 +103,7 @@ describe Todoable::Api::List do
           expected_list_arg = { list:  list }
           expect(client).to receive(:save_list).with(expected_list_arg)
                                                .and_call_original
-          client.create_list(list_id: list_id, name: name)
+          client.create_list(name: name)
         end
       end
     end

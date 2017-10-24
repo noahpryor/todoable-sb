@@ -29,7 +29,7 @@ module Todoable
         Todoable::List.build_from_response(id: id, name: attributes["name"], items: items)
       end
 
-      def create_list(list_id: , name: )
+      def create_list(name: )
         list = Todoable::List.new(name: name)
         save_list(list: list)
       end
