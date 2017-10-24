@@ -118,11 +118,17 @@ describe Todoable::Api::List do
       end
 
       context "with a valid list_id and name" do
+        let (:list) { Todoable::List.new(name: name) }
 
-
+        it "calls #save_list with a Todoable::List" do
+          allow(Todoable::List).to receive(:new).and_return(list)
+          expected_list_arg = { list:  list }
+          expect(client).to receive(:save_list).with(expected_list_arg)
+                                               .and_call_original
+          client.create_list(list_id: list_id, name: name)
+        end
       end
     end
-
 
     describe "#save_list" do
       context "without a list" do
