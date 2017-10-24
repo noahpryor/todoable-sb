@@ -1,4 +1,5 @@
-require 'HTTParty'
+require 'httparty'
+
 module Todoable
   class Client
     include Api::List
