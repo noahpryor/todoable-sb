@@ -86,10 +86,48 @@ describe Todoable::Api::List do
       end
     end
 
-    describe "#create" do
+    describe "#create_list" do
+      let (:list_id) { "todo-able-list-uuid"}
+      let (:name) { "New List" }
+
+      context "without a list_id" do
+        it "raises an ArgumentError" do
+          expect{client.create_list(name: name)}.to raise_error(ArgumentError)
+        end
+      end
+
+      context "without a name" do
+        it "raises an ArgumentError" do
+          expect{ client.create_list(list_id: list_id) }.to raise_error(ArgumentError)
+        end
+      end
+
+      context "with an invalid list_id" do
+
+        before do
+          stub_request(:post, /lists/).
+          to_return(status: 404)
+        end
+
+        it "raises a ContentNotFoundError error" do
+          expect{ client.create_list(
+            list_id: list_id, name: name
+          )}.to raise_error(Todoable::ContentNotFoundError)
+        end
+
+      end
+
+      context "with a valid list_id and name" do
+
+
+      end
+    end
+
+
+    describe "#save_list" do
       context "without a list" do
         it "raises an ArgumentError" do
-          expect{ client.create() }.to raise_error(ArgumentError)
+          expect{ client.save_list() }.to raise_error(ArgumentError)
         end
       end
 
@@ -102,29 +140,29 @@ describe Todoable::Api::List do
           expect(client.class).to receive(:post)
                                   .with(endpoint, Hash)
                                   .and_call_original
-          client.create(list: list)
+          client.save_list(list: list)
         end
 
         context "and receives a valid response" do
           it "returns a single Todoable:List" do
-            persisted_list = client.create(list: list)
+            persisted_list = client.save_list(list: list)
             expect(persisted_list).to be_a Todoable::List
           end
 
           it "has the correct list name" do
-            persisted_list = client.create(list: list)
+            persisted_list = client.save_list(list: list)
             expect(persisted_list.name).to eq(name)
           end
 
           it "has no items" do
-            persisted_list = client.create(list: list)
+            persisted_list = client.save_list(list: list)
             expect(persisted_list.items).to eq([])
           end
 
           # this passes as I'm mocking expected result to return a header,
           # but I'm not seeing the location header from the live API
           it "has an id" do
-            persisted_list = client.create(list: list)
+            persisted_list = client.save_list(list: list)
             expect(persisted_list.id).to eq('this-is-a-list-id')
           end
 
@@ -137,7 +175,7 @@ describe Todoable::Api::List do
           end
 
           it "raises a Todoable::Unauthorized error" do
-            expect { client.create(list: list) }.to raise_error(Todoable::UnauthorizedError)
+            expect { client.save_list(list: list) }.to raise_error(Todoable::UnauthorizedError)
           end
         end
 

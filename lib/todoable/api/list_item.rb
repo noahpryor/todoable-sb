@@ -4,7 +4,7 @@ module Todoable
 
       def add_item(list: , item: )
         raise ArgumentError unless list.is_a?(Todoable::List) &&
-        item.is_a?(Todoable::ListItem)
+          item.is_a?(Todoable::ListItem)
         response = self.class.post("/lists/#{list.id}/items", body: item.as_json, headers: headers)
         check_and_raise_errors(response)
         id = response.headers['Location'].split("/").last

@@ -29,7 +29,12 @@ module Todoable
         Todoable::List.build_from_response(id: id, name: attributes["name"], items: items)
       end
 
-      def create(list: )
+      def create_list(list_id: , name: )
+        list = Todoable::List.new(name: name)
+        save_list(list: list)
+      end
+
+      def save_list(list: )
         raise ArgumentError unless list.is_a?(Todoable::List)
         response = self.class.post('/lists', body: list.as_json, headers: headers)
         check_and_raise_errors(response)

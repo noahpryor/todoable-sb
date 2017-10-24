@@ -46,6 +46,8 @@ module Todoable
 
     def check_and_raise_errors(response)
       case response.code.to_i
+      when 404
+        raise ContentNotFoundError
       when 400...500
         raise UnauthorizedError
       end
@@ -55,6 +57,9 @@ module Todoable
       {'Authorization': "Token token=#{@token}"}
     end
 
+  end
+
+  class ContentNotFoundError < StandardError
   end
 
   class AuthenticationError < StandardError
