@@ -230,46 +230,41 @@ describe Todoable::Api::List do
     end
 
     describe "#delete_list" do
-      context "without a list" do
+      context "without a list id" do
         it "raises an ArgumentError" do
           expect{ client.delete_list() }.to raise_error(ArgumentError)
         end
       end
 
-      context "without a non-persisted list" do
-        let (:list) { Todoable::List.new(name: "Save Me Plz") }
-        it "raises an ArgumentError" do
-          expect{ client.delete_list(list: list)}.to raise_error(ArgumentError)
+      context "without an invalid list id" do
+        let (:list_id) { "not-a-valid-id" }
+
+        before do
+          stub_request(:delete, /lists\//).
+            to_return(status: 404)
+        end
+
+        it "raises a ContentNotFoundError" do
+          expect{
+            client.delete_list(id: list_id)
+          }.to raise_error(Todoable::ContentNotFoundError)
         end
       end
 
-      context "with a persisted list" do
+      context "with a valid list id" do
         let (:id) { "todo-able-list-uuid" }
-        let (:name) { "Not Really So Urgent Anymore" }
-        let (:items) { [
-            Todoable::ListItem.build_from_response(
-              id: 'id1', list_id: id, name: 'first', status: :todo
-            ),
-            Todoable::ListItem.build_from_response(
-              id: 'id2', list_id: id, name: 'second', status: :todo
-            ),
-          ]
-        }
-        let (:list) {
-          Todoable::List.build_from_response(id: id, name: "Urgent Things", items: items)
-        }
 
         it "deletes to the list endpoint" do
           endpoint = "/lists/#{id}"
           expect(client.class).to receive(:delete)
                                   .with(endpoint, Hash)
                                   .and_call_original
-          client.delete_list(list: list)
+          client.delete_list(id: id)
         end
 
         context "and receives a valid response" do
           it "returns true" do
-            response = client.delete_list(list: list)
+            response = client.delete_list(id: id)
             expect(response).to eq(true)
           end
         end
@@ -281,7 +276,7 @@ describe Todoable::Api::List do
           end
 
           it "raises a Todoable::Unauthorized error" do
-            expect { client.delete_list(list: list) }.to raise_error(Todoable::UnauthorizedError)
+            expect { client.delete_list(id: id) }.to raise_error(Todoable::UnauthorizedError)
           end
         end
       end
