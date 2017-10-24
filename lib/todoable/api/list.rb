@@ -39,9 +39,8 @@ module Todoable
 
       def update(list_id: , name: )
         list = Todoable::List.new(name: name)
-        response = self.class.patch("/lists/#{list_id}", body: list.post_body, headers: headers)
+        response = self.class.patch("/lists/#{list_id}", body: list.post_body, headers: headers, format: :text)
         check_and_raise_errors(response)
-        id = response.headers['Location'].split("/").last
         list.name = name
         return list
       end
