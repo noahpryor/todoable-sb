@@ -13,7 +13,11 @@ RSpec.configure do |config|
   end
 end
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-  SimpleCov::Formatter::HTMLFormatter,
-  Coveralls::SimpleCov::Formatter
-]
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
+  [
+    SimpleCov::Formatter::HTMLFormatter,
+    Coveralls::SimpleCov::Formatter
+  ]
+)
+
+BASE_URL = 'http://todoable.teachable.tech/api/'.freeze

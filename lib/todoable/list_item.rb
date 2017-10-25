@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Todoable
+  # Class for managing instances of Todoable Todo List items (Todos)
   class ListItem
     attr_accessor :id, :list_id, :name, :status
 
@@ -27,7 +28,7 @@ module Todoable
     end
 
     def persisted
-      !!id && !!list_id
+      [id, list_id].compact.length == 2
     end
 
     def attributes

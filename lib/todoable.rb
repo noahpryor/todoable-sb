@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# :nodoc:
 require 'todoable/version'
+# :nodoc:
 module Todoable
   autoload :Client, 'todoable/client'
   autoload :Api, 'todoable/api'

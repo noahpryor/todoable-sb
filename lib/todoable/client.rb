@@ -3,6 +3,7 @@
 require 'httparty'
 
 module Todoable
+  # Base class for calling Todoable API
   class Client
     include Api::List
     include Api::ListItem
@@ -27,14 +28,9 @@ module Todoable
         password: @password
       }
       response = self.class.post('/authenticate', @options)
-
-      case response.code.to_i
-      when 200..300
-        @token = response.parsed_response['token']
-        return self
-      else
-        raise AuthenticationError, 'Could not retrive token'
-      end
+      check_and_raise_errors(response)
+      @token = response.parsed_response['token']
+      self
     end
 
     # TODO: document this
