@@ -24,19 +24,7 @@ I found a couple issues in the docs, maybe they are intentional:
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'todoable-sb'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install todoable-sb
+Just don't do it?
 
 ## Usage
 
