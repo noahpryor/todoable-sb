@@ -184,7 +184,11 @@ describe Todoable::Api::List do
     describe '#create_list' do
       let(:name) { 'New List' }
       let(:endpoint) { '/lists' }
-
+      let(:error_body) do
+        File.open(
+          File.expand_path('../../../support/fixtures/generic_error.json', __FILE__)
+        ).read
+      end
       it 'raises an ArgumentError without a name' do
         expect { client.create_list }.to raise_error(ArgumentError)
       end
@@ -215,6 +219,13 @@ describe Todoable::Api::List do
       it 'has an id' do
         persisted_list = client.create_list(name: name)
         expect(persisted_list.id).to eq('this-is-a-list-id')
+      end
+
+      it 'returns an UnprocessableError if list with name exists' do
+        stub_request(:post, %r{lists})
+          .to_return(status: 422, body: error_body)
+          expect{ client.create_list(name: name) }
+            .to raise_error(Todoable::UnprocessableError)
       end
     end
 

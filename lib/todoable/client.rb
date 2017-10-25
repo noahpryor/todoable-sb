@@ -14,7 +14,7 @@ module Todoable
     format :json
     base_uri 'https://todoable.teachable.tech/api'
 
-    attr_reader :token, :token_expiry
+    attr_reader :token
 
     # Create a client with a username and password
     #
@@ -103,8 +103,8 @@ module Todoable
       when 401
         raise UnauthorizedError
       when 422
-        
-        raise UnprocessableError
+        errors = response.parsed_response['errors']
+        raise UnprocessableError.new(errors: errors)
       else
         raise StandardError.new(
           "Uknown error. Status code #{respon.code} from Todoable API"
@@ -117,13 +117,29 @@ module Todoable
     end
   end
 
+  # Raised when Todoable API returns 404
   class ContentNotFoundError < StandardError
-    # Raised when
   end
 
+  # Raised when Todoable API returns 422 UnprocessableEntity
   class UnprocessableError < StandardError
+
+    # Initializer that accepts the error payload from API and
+    # formats a message
+    #
+    # @param errors [Hash] The error payload returned by Todoable
+    #
+    # @return [Todoable::UnprocessableError] An UnprocessableError
+    #
+    def initialize(errors: errors)
+      @message = errors.map do |k, v|
+        "#{k} #{v.join(',').chomp(',')}"
+      end.join(', ').chomp(',').<<'.'
+    end
   end
 
+  # Raised when attempting to make an API call without
+  # having authenticated the client
   class NotAuthenticated < StandardError
   end
 
