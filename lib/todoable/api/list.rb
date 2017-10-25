@@ -4,6 +4,17 @@ module Todoable
   module Api
     # API methods related to List endpoints
     module List
+      # Fetch all todoable lists for authenticated user
+      #
+      #
+      # @return [Array] An array of Todoable list instances
+      #   without included items
+      #
+      # @example
+      #   client.lists =>
+      #    [ <Todoable::List @name="Urgent Tasks", @id="uuid" @items=[]>,
+      #      <Todoable::List @name="Regular Tasks", @id="uuid" @items=[]>
+      #    ]
       def lists
         check_token
         response = self.class.get('/lists', headers: headers)
@@ -17,6 +28,19 @@ module Todoable
         end
       end
 
+      # Fetch a todoable list by ID for authenticated user
+      #
+      # @param id [String] The id of the list you want to fetch
+      # @return [Array] A Todoable list instance with included items
+      #
+      # @example
+      #   client.find_list('todo-able-list-uuid') =>
+      #     <Todoable::List @name="Urgent Tasks",
+      #       @id="todo-able-list-uuid"
+      #       @items=[ <Todoable::ListItem>, <Todoable::ListItem>]
+      #     >
+      #
+      #
       def find_list(id)
         check_token
         response = self.class.get("/lists/#{id}", headers: headers)
@@ -24,6 +48,14 @@ module Todoable
         Todoable::List.build_from_response(response.parsed_response)
       end
 
+      # Create a list with a name
+      #
+      # @param name [String] the name for the new List
+      # @return [Todoable::List] A Todoable list instance
+      #
+      # @example
+      #   client.create_list(name: "Urgent Tasks") =>
+      #     <Todoable::List @name="Urgent Tasks", @id="uuid" @items=[]>
       def create_list(name:)
         check_token
         list = Todoable::List.new(name: name)
@@ -35,6 +67,16 @@ module Todoable
         Todoable::List.build_from_response(attributes)
       end
 
+      # Update a list with a new name
+      #
+      # @param list_id [String] the ID of the list you want to update
+      # @param name [String] the new name for the List
+      # @return [true] Returns true if the list was successfully updated,
+      #   otherwise raises an error
+      #
+      # @example
+      #   client.update_list(id: 'uuid', name: "Urgent Tasks") =>
+      #     true
       def update_list(list_id:, name:)
         check_token
         list = Todoable::List.new(name: name)
@@ -53,6 +95,15 @@ module Todoable
         true
       end
 
+      # Delete a list and its items for an authenticated user
+      #
+      # @param id [String] the ID of the list you want to delete
+      # @return [true] Returns true if the list was successfully deleted,
+      #   otherwise raises an error
+      #
+      # @example
+      #   client.delete_list(id: 'uuid') =>
+      #     true
       def delete_list(id:)
         check_token
         response = self.class.delete("/lists/#{id}", headers: headers)

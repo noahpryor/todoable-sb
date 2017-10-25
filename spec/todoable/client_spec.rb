@@ -29,7 +29,7 @@ describe Todoable::Client do
     let(:endpoint) { '/authenticate' }
     let(:options)  { { basic_auth: auth_hash } }
 
-    context 'with an initialized client and valid token' do
+    context 'with an initialized client' do
       it 'calls the authenticate endpoint' do
         allow(client.class).to receive(:post)
           .and_call_original
@@ -41,18 +41,6 @@ describe Todoable::Client do
       it 'sets the authentication token' do
         client.authenticate
         expect(client.token.is_a?(String)).to be(true)
-      end
-    end
-
-    context 'with an initialized client but expired token' do
-      before do
-        stub_request(:post, /authenticate/)
-          .to_return(status: 429)
-      end
-
-      it 'raises a Todoable::AuthenticationError' do
-        expect { client.authenticate }
-          .to raise_error(Todoable::UnauthorizedError)
       end
     end
   end
