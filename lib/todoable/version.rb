@@ -3,5 +3,5 @@
 # :nodoc:
 module Todoable
   # :nodoc:
-  VERSION = '0.17.0'.freeze
+  VERSION = '1.0.0rc'.freeze
 end
