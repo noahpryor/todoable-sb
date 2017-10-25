@@ -56,5 +56,4 @@ For example, to get all of the user's lists:
 ## Documentation
 Docs can be generated via [yard](https://github.com/lsegal/yard#installing).
 
-They are also included in the `docs/` directory.
-(sb note: normally this would be gitignored and docs on rdoc)
+They are also hosted [here](https://sbauch.github.io/todoable-sb/index.html).
