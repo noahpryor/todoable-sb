@@ -186,9 +186,13 @@ describe Todoable::Api::List do
       let(:endpoint) { '/lists' }
       let(:error_body) do
         File.open(
-          File.expand_path('../../../support/fixtures/generic_error.json', __FILE__)
+          File.expand_path(
+            '../../../support/fixtures/generic_error.json',
+            __FILE__
+          )
         ).read
       end
+
       it 'raises an ArgumentError without a name' do
         expect { client.create_list }.to raise_error(ArgumentError)
       end
@@ -222,10 +226,10 @@ describe Todoable::Api::List do
       end
 
       it 'returns an UnprocessableError if list with name exists' do
-        stub_request(:post, %r{lists})
+        stub_request(:post, /lists/)
           .to_return(status: 422, body: error_body)
-          expect{ client.create_list(name: name) }
-            .to raise_error(Todoable::UnprocessableError)
+        expect { client.create_list(name: name) }
+          .to raise_error(Todoable::UnprocessableError)
       end
     end
 

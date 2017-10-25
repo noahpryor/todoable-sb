@@ -96,19 +96,14 @@ module Todoable
 
     def check_and_raise_errors(response)
       case response.code.to_i
-      when 200..300
-        return true
-      when 404
-        raise ContentNotFoundError
-      when 401
-        raise UnauthorizedError
+      when 200..300 then true
+      when 404 then raise ContentNotFoundError
+      when 401 then raise UnauthorizedError
       when 422
         errors = response.parsed_response['errors']
         raise UnprocessableError.new(errors: errors)
       else
-        raise StandardError.new(
-          "Uknown error. Status code #{respon.code} from Todoable API"
-        )
+        raise StandardError, "Uknown error from Todoable: #{response}"
       end
     end
 
@@ -123,7 +118,6 @@ module Todoable
 
   # Raised when Todoable API returns 422 UnprocessableEntity
   class UnprocessableError < StandardError
-
     # Initializer that accepts the error payload from API and
     # formats a message
     #
@@ -131,7 +125,7 @@ module Todoable
     #
     # @return [Todoable::UnprocessableError] An UnprocessableError
     #
-    def initialize(errors: errors)
+    def initialize(errors:)
       @message = errors.map do |k, v|
         "#{k} #{v.join(',').chomp(',')}"
       end.join(', ').chomp(',').<<'.'
@@ -142,5 +136,4 @@ module Todoable
   # having authenticated the client
   class NotAuthenticated < StandardError
   end
-
 end
