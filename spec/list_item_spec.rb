@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+BASE_URL = "http://todoable.teachable.tech/api/"
 describe Todoable::ListItem do
   let (:name) { "Feed the cat" }
   let (:item) { Todoable::ListItem.new(name: name)}
@@ -36,8 +36,15 @@ describe Todoable::ListItem do
       let (:list_id) { "todo-able-list-uuid" }
       let (:name) { "Urgent Things" }
       let (:id) { 'todo-able-list-item-uuid'}
+
+      let (:item_attributes) {{
+        "name" => name,
+        "src" => "#{BASE_URL}lists/#{list_id}/items/#{id}",
+        "finished_at" => nil
+      }}
+
       let (:item) {
-        Todoable::ListItem.build_from_response(id: id, list_id: list_id, name: name, status: status)
+        Todoable::ListItem.build_from_response(item_attributes)
       }
 
       it "returns a list item with a name" do
@@ -83,8 +90,15 @@ describe Todoable::ListItem do
     let (:list_id) { "todo-able-list-uuid" }
     let (:name) {"Binge season 2"}
     let (:id) { 'todo-able-list-item-uuid'}
+
+    let (:item_attributes) {{
+      "name" => name,
+      "src" => "#{BASE_URL}lists/#{list_id}/items/#{id}",
+      "finished_at" => nil
+    }}
+
     let (:item) {
-      Todoable::ListItem.build_from_response(id: id, list_id: list_id, name: name, status: status)
+      Todoable::ListItem.build_from_response(item_attributes)
     }
 
     it "returns the expected attributes" do

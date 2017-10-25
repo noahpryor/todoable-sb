@@ -65,6 +65,11 @@ describe Todoable::Api::List do
             list = client.find_list(list_id)
             expect(list).to be_a Todoable::List
           end
+
+          it 'returns a Todoable:List with Todoable::ListItems' do
+            list = client.find_list(list_id)
+            expect(list.items).to all be_a Todoable::ListItem
+          end
         end
 
         context 'and receives an unauthorized response' do

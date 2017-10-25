@@ -5,35 +5,26 @@ module Todoable
         response = self.class.get('/lists', headers: headers)
         check_and_raise_errors(response)
         response.parsed_response['lists'].map do |json|
-          id = json['src'].split('/').last # HACK
-          Todoable::List.build_from_response(id: id, name: json['name'], items: [])
+          attributes = json.merge!({
+            'items' => [],
+            'id' => json['src'].split("/").last
+          })
+          Todoable::List.build_from_response(attributes)
         end
       end
 
       def find_list(id)
         response = self.class.get("/lists/#{id}", headers: headers)
         check_and_raise_errors(response)
-        attributes = response.parsed_response
-
-        items = attributes['items'].map do |item_json|
-          item_id = item_json['src'].split('/').last # HACK
-          Todoable::ListItem.build_from_response(
-            id: item_id,
-            list_id: id,
-            name: item_json['name'],
-            status: item_json['finished_at'].nil? ? :todo : :done
-          )
-        end
-
-        Todoable::List.build_from_response(id: id, name: attributes['name'], items: items)
+        Todoable::List.build_from_response(response.parsed_response)
       end
 
       def create_list(name:)
         list = Todoable::List.new(name: name)
         response = self.class.post('/lists', body: list.post_body, headers: headers)
         check_and_raise_errors(response)
-        id = response.headers['Location'].split('/').last
-        Todoable::List.build_from_response(id: id, name: list.name, items: [])
+        attributes = response.parsed_response.merge!({'items' => []})
+        Todoable::List.build_from_response(attributes)
       end
 
       def update(list_id:, name:)

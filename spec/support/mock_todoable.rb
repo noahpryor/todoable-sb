@@ -19,7 +19,7 @@ class MockTodoable < Sinatra::Base
 
   post '/api/lists' do
     status 201
-    response.headers['Location'] = 'http://todoable.teachable.tech/api/lists/this-is-a-list-id'
+    json_response(201, 'create_list.json')
   end
 
   patch '/api/lists/:id' do

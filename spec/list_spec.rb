@@ -14,20 +14,38 @@ describe Todoable::List do
 
   describe "::build_from_response" do
 
-    context "provided the expected json" do
+    context "provided the expected hash" do
 
       let (:status) { :todo }
       let (:list_id) { "todo-able-list-uuid" }
       let (:list_name) { "Urgent Things" }
       let (:name) {"Binge season 2"}
       let (:id) { 'todo-able-list-item-uuid'}
+
+      let (:item_attributes) {{
+        "name" => name,
+        "src" => "http://todoable.teachable.tech/api/lists/#{list_id}/items/#{id}",
+        "finished_at" => nil
+      }}
+
       let (:item) {
-        Todoable::ListItem.build_from_response(id: id, list_id: list_id, name: name, status: status)
+        Todoable::ListItem.build_from_response(item_attributes)
       }
 
+      let (:attributes) {{
+        "id" => list_id,
+        "name" => list_name,
+        "items" => [item_attributes]
+      }}
+
       let (:list) {
-        Todoable::List.build_from_response(id: list_id, name: list_name, items: [item])
+        Todoable::List.build_from_response(attributes)
       }
+
+      before do
+        allow(Todoable::ListItem).to receive(:build_from_response)
+                                      .and_return(item)
+      end
 
       it "returns a list with a name" do
         expect(list.name).to eq(list_name)
@@ -69,12 +87,23 @@ describe Todoable::List do
     let (:list_name) { "Urgent Things" }
     let (:name) {"Binge season 2"}
     let (:id) { 'todo-able-list-item-uuid'}
-    let (:item) {
-      Todoable::ListItem.build_from_response(id: id, list_id: list_id, name: name, status: status)
-    }
+
+    let (:item_attributes) {{
+      "name" => name,
+      "src" => "http://todoable.teachable.tech/api/lists/#{list_id}/items/#{id}",
+      "finished_at" => nil
+    }}
+
+    let (:item) { Todoable::ListItem.build_from_response(item_attributes) }
+
+    let (:attributes) {{
+      "id" => list_id,
+      "name" => list_name,
+      "items" => [item_attributes]
+    }}
 
     let (:list) {
-      Todoable::List.build_from_response(id: list_id, name: list_name, items: [item])
+      Todoable::List.build_from_response(attributes)
     }
 
     it "returns the expected attributes" do
