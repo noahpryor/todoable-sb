@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Todoable::Api::ListItem do
@@ -48,7 +50,7 @@ describe Todoable::Api::ListItem do
         context 'and receives a valid response' do
           it 'returns a single Todoable::ListItem' do
             new_item = client.create_item(list_id: list_id, name: name)
-            expect(new_item).to be_a Todoable::ListItem
+            expect(new_item.is_a?(Todoable::ListItem)).to be(true)
           end
 
           it 'has the expected name' do

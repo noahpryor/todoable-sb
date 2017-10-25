@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'todoable'
 require 'rspec'
 require 'webmock/rspec'
@@ -6,7 +8,7 @@ require 'simplecov'
 require 'coveralls'
 
 RSpec.configure do |config|
-  config.before(:each) do
+  config.before do
     stub_request(:any, /todoable.teachable.tech/).to_rack(MockTodoable)
   end
 end

@@ -1,4 +1,4 @@
-# coding: utf-8
+# frozen_string_literal: true
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
@@ -21,11 +21,12 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 1.15'
+  spec.add_development_dependency 'coveralls'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.7.0'
-  spec.add_development_dependency 'webmock', '~> 3.1.0'
-  spec.add_development_dependency 'sinatra', '~> 2.0.0'
+  spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'simplecov', '~> 0.15.1'
-  spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'sinatra', '~> 2.0.0'
+  spec.add_development_dependency 'webmock', '~> 3.1.0'
   spec.add_dependency 'httparty', '~> 0.15.6'
 end

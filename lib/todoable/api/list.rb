@@ -1,14 +1,17 @@
+# frozen_string_literal: true
+
 module Todoable
   module Api
+    # API methods related to List endpoints
     module List
       def lists
         response = self.class.get('/lists', headers: headers)
         check_and_raise_errors(response)
         response.parsed_response['lists'].map do |json|
-          attributes = json.merge!({
+          attributes = json.merge!(
             'items' => [],
-            'id' => json['src'].split("/").last
-          })
+            'id' => json['src'].split('/').last
+          )
           Todoable::List.build_from_response(attributes)
         end
       end
@@ -21,15 +24,22 @@ module Todoable
 
       def create_list(name:)
         list = Todoable::List.new(name: name)
-        response = self.class.post('/lists', body: list.post_body, headers: headers)
+        response = self.class.post(
+          '/lists', body: list.post_body, headers: headers
+        )
         check_and_raise_errors(response)
-        attributes = response.parsed_response.merge!({'items' => []})
+        attributes = response.parsed_response.merge!('items' => [])
         Todoable::List.build_from_response(attributes)
       end
 
       def update(list_id:, name:)
         list = Todoable::List.new(name: name)
-        response = self.class.patch("/lists/#{list_id}", body: list.post_body, headers: headers, format: :text)
+        response = self.class.patch(
+          "/lists/#{list_id}",
+          body: list.post_body,
+          headers: headers,
+          format: :text
+        )
         check_and_raise_errors(response)
         # This endpoint returns a plaintext body: "<new name> updated", so
         # while I'd like to return a List with ListItems, that would require

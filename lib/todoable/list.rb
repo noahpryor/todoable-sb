@@ -16,13 +16,6 @@ module Todoable
       return list
     end
 
-    # def self.build_from_response(id:, name: , items: )
-    #   list = self.new(name: name)
-    #   list.id = id
-    #   list.items = items
-    #   return list
-    # end
-
     def post_body
       {
         "list": {

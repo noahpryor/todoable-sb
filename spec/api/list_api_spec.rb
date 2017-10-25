@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Todoable::Api::List do
@@ -24,8 +26,8 @@ describe Todoable::Api::List do
 
         it 'sets the name and ID of Todoable::List items' do
           list = client.lists.first
-          expect(list.name).to be_a(String)
-          expect(list.id).to be_a(String)
+          expect(list.name.is_a?(String)).to be(true)
+          expect(list.id.is_a?(String)).to be(true)
         end
       end
 
@@ -63,7 +65,7 @@ describe Todoable::Api::List do
         context 'and receives a valid response' do
           it 'returns a single Todoable:List' do
             list = client.find_list(list_id)
-            expect(list).to be_a Todoable::List
+            expect(list.is_a?(Todoable::List)).to be(true)
           end
 
           it 'returns a Todoable:List with Todoable::ListItems' do
@@ -106,7 +108,7 @@ describe Todoable::Api::List do
         context 'and receives a valid response' do
           it 'returns a single Todoable:List' do
             persisted_list = client.create_list(name: name)
-            expect(persisted_list).to be_a Todoable::List
+            expect(persisted_list.is_a?(Todoable::List)).to be(true)
           end
 
           it 'has the correct list name' do
@@ -143,6 +145,7 @@ describe Todoable::Api::List do
     describe '#update' do
       let (:id) { 'todo-able-list-uuid' }
       let (:name) { 'Not Really So Urgent Anymore' }
+
       context 'without a list id' do
         it 'raises an ArgumentError' do
           expect { client.update(name: name) }.to raise_error(ArgumentError)
@@ -164,7 +167,7 @@ describe Todoable::Api::List do
           # response rather than json
           xit 'returns a single Todoable:List' do
             updated_list = client.update(list_id: id, name: name)
-            expect(updated_list).to be_a Todoable::List
+            expect(updated_list.is_a?(Todoable::List)).to be(true)
           end
 
           xit 'has the updated list name' do

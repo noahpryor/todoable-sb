@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # spec/support/mock_todoable.rb
 
 require 'sinatra/base'
