@@ -35,7 +35,7 @@ module Todoable
         Todoable::List.build_from_response(attributes)
       end
 
-      def update(list_id:, name:)
+      def update_list(list_id:, name:)
         check_token
         list = Todoable::List.new(name: name)
         response = self.class.patch(

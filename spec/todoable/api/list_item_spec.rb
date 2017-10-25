@@ -20,22 +20,22 @@ describe Todoable::Api::ListItem do
       end
     end
 
-    describe '#finish' do
+    describe '#finish_item' do
       let(:list_id) { 'todo-able-list-uuid' }
       let(:id) { 'todo-able-list-item-uuid' }
 
       it 'raises a Todoable::NotAuthenticated error' do
-        expect { client.finish(list_id: list_id, id: id) }
+        expect { client.finish_item(list_id: list_id, id: id) }
           .to raise_error(Todoable::NotAuthenticated)
       end
     end
 
-    describe '#delete' do
+    describe '#delete_item' do
       let(:list_id) { 'todo-able-list-uuid' }
       let(:id) { 'todo-able-list-item-uuid' }
 
       it 'raises a Todoable::NotAuthenticated error' do
-        expect { client.delete(list_id: list_id, id: id) }
+        expect { client.delete_item(list_id: list_id, id: id) }
           .to raise_error(Todoable::NotAuthenticated)
       end
     end
@@ -95,72 +95,72 @@ describe Todoable::Api::ListItem do
       end
     end
 
-    describe '#finish' do
+    describe '#finish_item' do
       let(:id) { 'todo-able-list-item-uuid' }
       let(:list_id) { 'todo-able-list-uuid' }
       let(:endpoint) { "/lists/#{list_id}/items/#{id}/finish" }
 
       it 'without a list id raises an ArgumentError' do
-        expect { client.finish(id: id) }.to raise_error(ArgumentError)
+        expect { client.finish_item(id: id) }.to raise_error(ArgumentError)
       end
 
       it 'without a id raises an ArgumentError' do
-        expect { client.finish(list_id: list_id) }
+        expect { client.finish_item(list_id: list_id) }
           .to raise_error(ArgumentError)
       end
 
       it 'with an invalid id raises a ContentNotFoundError' do
         stub_request(:put, /lists/).to_return(status: 404)
         expect do
-          client.finish(id: id, list_id: list_id)
+          client.finish_item(id: id, list_id: list_id)
         end.to raise_error(Todoable::ContentNotFoundError)
       end
 
       it 'puts to the list items finish endpoint with an id' do
         allow(client.class).to receive(:put)
           .and_call_original
-        client.finish(id: id, list_id: list_id)
+        client.finish_item(id: id, list_id: list_id)
         expect(client.class).to have_received(:put)
           .with(endpoint, Hash)
       end
 
       it 'returns true' do
-        result = client.finish(id: id, list_id: list_id)
+        result = client.finish_item(id: id, list_id: list_id)
         expect(result).to eq(true)
       end
     end
 
-    describe '#delete' do
+    describe '#delete_item' do
       let(:id) { 'todo-able-list-item-uuid' }
       let(:list_id) { 'todo-able-list-uuid' }
       let(:endpoint) { "/lists/#{list_id}/items/#{id}" }
 
       it 'without a list id raises an ArgumentError' do
-        expect { client.delete(id: id) }.to raise_error(ArgumentError)
+        expect { client.delete_item(id: id) }.to raise_error(ArgumentError)
       end
 
       it 'without an item id raises an ArgumentError' do
-        expect { client.delete(list_id: list_id) }
+        expect { client.delete_item(list_id: list_id) }
           .to raise_error(ArgumentError)
       end
 
       it 'with an invalid list id raises a ContentNotFoundError' do
         stub_request(:delete, /lists/)
           .to_return(status: 404)
-        expect { client.delete(id: id, list_id: list_id) }
+        expect { client.delete_item(id: id, list_id: list_id) }
           .to raise_error(Todoable::ContentNotFoundError)
       end
 
       it 'puts to the list items finish endpoint' do
         allow(client.class).to receive(:delete)
           .and_call_original
-        client.delete(id: id, list_id: list_id)
+        client.delete_item(id: id, list_id: list_id)
         expect(client.class).to have_received(:delete)
           .with(endpoint, Hash)
       end
 
       it 'returns true' do
-        result = client.delete(id: id, list_id: list_id)
+        result = client.delete_item(id: id, list_id: list_id)
         expect(result).to eq(true)
       end
     end

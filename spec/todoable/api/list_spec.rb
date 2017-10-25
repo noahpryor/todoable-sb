@@ -34,13 +34,13 @@ describe Todoable::Api::List do
       end
     end
 
-    describe '#update' do
+    describe '#update_list' do
       let(:id) { 'todo-able-list-uuid' }
       let(:name) { 'Not Really So Urgent Anymore' }
 
       it 'raises a Todoable::NotAuthenticated error' do
         expect do
-          client.update(list_id: id, name: name)
+          client.update_list(list_id: id, name: name)
         end.to raise_error(Todoable::NotAuthenticated)
       end
     end
@@ -86,13 +86,13 @@ describe Todoable::Api::List do
       end
     end
 
-    describe '#update' do
+    describe '#update_list' do
       let(:id) { 'todo-able-list-uuid' }
       let(:name) { 'Not Really So Urgent Anymore' }
 
       it 'raises a Todoable::NotAuthenticated error' do
         expect do
-          client.update(list_id: id, name: name)
+          client.update_list(list_id: id, name: name)
         end.to raise_error(Todoable::NotAuthenticated)
       end
     end
@@ -204,18 +204,18 @@ describe Todoable::Api::List do
       end
     end
 
-    describe '#update' do
+    describe '#update_list' do
       let(:id) { 'todo-able-list-uuid' }
       let(:name) { 'Not Really So Urgent Anymore' }
       let(:endpoint) { "/lists/#{id}" }
 
       it 'raises an ArgumentError without a list id' do
-        expect { client.update(name: name) }.to raise_error(ArgumentError)
+        expect { client.update_list(name: name) }.to raise_error(ArgumentError)
       end
 
       it 'patches to the list endpoint with a new name' do
         allow(client.class).to receive(:patch).and_call_original
-        client.update(list_id: id, name: name)
+        client.update_list(list_id: id, name: name)
         expect(client.class).to have_received(:patch)
           .with(endpoint, Hash)
       end
@@ -223,17 +223,17 @@ describe Todoable::Api::List do
       # Ideally these tests would apply, but the API returns a plaintext
       # response rather than json
       xit 'returns a single Todoable:List' do
-        updated_list = client.update(list_id: id, name: name)
+        updated_list = client.update_list(list_id: id, name: name)
         expect(updated_list.is_a?(Todoable::List)).to be(true)
       end
 
       xit 'has the updated list name' do
-        updated_list = client.update(list_id: id, name: name)
+        updated_list = client.update_list(list_id: id, name: name)
         expect(updated_list.name).to eq(name)
       end
 
       it 'returns true' do
-        response = client.update(list_id: id, name: name)
+        response = client.update_list(list_id: id, name: name)
         expect(response).to eq(true)
       end
     end

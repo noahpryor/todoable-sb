@@ -16,7 +16,7 @@ module Todoable
         item
       end
 
-      def finish(id:, list_id:)
+      def finish_item(id:, list_id:)
         check_token
         response = self.class.put(
           "/lists/#{list_id}/items/#{id}/finish",
@@ -26,7 +26,7 @@ module Todoable
         true
       end
 
-      def delete(id:, list_id:)
+      def delete_item(id:, list_id:)
         check_token
         response = self.class.delete(
           "/lists/#{list_id}/items/#{id}",
