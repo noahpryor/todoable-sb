@@ -1,19 +1,20 @@
+# frozen_string_literal: true
+
 module Todoable
   class List
-
     attr_accessor :id, :name, :items
 
-    def initialize(name: )
+    def initialize(name:)
       @name = name
     end
 
     def self.build_from_response(attributes)
-      list = self.new(name: attributes['name'])
+      list = new(name: attributes['name'])
       list.id = attributes['id']
       list.items = attributes['items'].map do |item|
         ListItem.build_from_response(item)
       end
-      return list
+      list
     end
 
     def post_body
@@ -32,7 +33,7 @@ module Todoable
       {
         id: @id,
         name: @name,
-        items: @items.map(&:attributes),
+        items: @items.map(&:attributes)
       }
     end
   end

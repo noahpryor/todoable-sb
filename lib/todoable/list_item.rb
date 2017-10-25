@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Todoable
   class ListItem
     attr_accessor :id, :list_id, :name, :status
 
-    def initialize(name: )
+    def initialize(name:)
       @name = name
       @status = :todo
     end
@@ -36,6 +38,5 @@ module Todoable
         list_id: @list_id
       }
     end
-
   end
 end

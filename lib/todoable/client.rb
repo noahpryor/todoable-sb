@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'httparty'
 
 module Todoable
@@ -12,34 +14,31 @@ module Todoable
     attr_writer :username, :password, :options
 
     # TODO: document this
-    def initialize(username: , password: )
-      @username, @password = username, password
+    def initialize(username:, password:)
+      @username = username
+      @password = password
       @options = {}
     end
 
     # TODO: document this
     def authenticate
-      @options.merge!(
-        {
-          basic_auth: {
-            username: @username,
-            password: @password
-          }
-        }
-      )
+      @options[:basic_auth] = {
+        username: @username,
+        password: @password
+      }
       response = self.class.post('/authenticate', @options)
 
       case response.code.to_i
       when 200..300
-        @token = response.parsed_response["token"]
+        @token = response.parsed_response['token']
         return self
       else
-        raise AuthenticationError, "Could not retrive token"
+        raise AuthenticationError, 'Could not retrive token'
       end
     end
 
     # TODO: document this
-    def self.build(username: , password: )
+    def self.build(username:, password:)
       new(username: username, password: password).authenticate
     end
 
@@ -57,9 +56,8 @@ module Todoable
     end
 
     def headers
-      {'Authorization': "Token token=#{@token}"}
+      { 'Authorization': "Token token=#{@token}" }
     end
-
   end
 
   class ContentNotFoundError < StandardError
