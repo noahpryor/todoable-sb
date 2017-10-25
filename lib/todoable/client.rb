@@ -38,7 +38,12 @@ module Todoable
       new(username: username, password: password).authenticate
     end
 
-    # private
+    private
+
+    def check_token
+      return true if @token
+      raise NotAuthenticated
+    end
 
     def check_and_raise_errors(response)
       case response.code.to_i
@@ -57,6 +62,9 @@ module Todoable
   end
 
   class ContentNotFoundError < StandardError
+  end
+
+  class NotAuthenticated < StandardError
   end
 
   class AuthenticationError < StandardError

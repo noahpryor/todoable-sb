@@ -5,6 +5,7 @@ module Todoable
     # API methods related to List endpoints
     module List
       def lists
+        check_token
         response = self.class.get('/lists', headers: headers)
         check_and_raise_errors(response)
         response.parsed_response['lists'].map do |json|
@@ -17,12 +18,14 @@ module Todoable
       end
 
       def find_list(id)
+        check_token
         response = self.class.get("/lists/#{id}", headers: headers)
         check_and_raise_errors(response)
         Todoable::List.build_from_response(response.parsed_response)
       end
 
       def create_list(name:)
+        check_token
         list = Todoable::List.new(name: name)
         response = self.class.post(
           '/lists', body: list.post_body, headers: headers
@@ -33,6 +36,7 @@ module Todoable
       end
 
       def update(list_id:, name:)
+        check_token
         list = Todoable::List.new(name: name)
         response = self.class.patch(
           "/lists/#{list_id}",
@@ -50,6 +54,7 @@ module Todoable
       end
 
       def delete_list(id:)
+        check_token
         response = self.class.delete("/lists/#{id}", headers: headers)
         check_and_raise_errors(response)
         true
