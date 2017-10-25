@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['sbauch@gmail.com']
 
   spec.summary       = "Sam Bauch's take home assignment for Teachable"
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/sbauch/todoable-sb"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
