@@ -41,6 +41,56 @@ describe Todoable::Api::ListItem do
     end
   end
 
+  context 'with a client with an expired token' do
+    let(:username) { 'username' }
+    let(:password) { 'password' }
+    let(:client) do
+      Todoable::Client.build(username: username, password: password)
+    end
+
+    before do
+      client # else client won't be initialized until "the future"
+      Timecop.freeze(Time.now + (20 * 60)) # advance 20 minutes
+    end
+
+    after do
+      Timecop.return
+    end
+
+    describe '#create_item' do
+      let(:list_id) { 'todo-able-list-uuid' }
+      let(:name) { 'Urgent Things' }
+
+      it 'reauthenticates the client' do
+        allow(client).to receive(:authenticate).and_return(true)
+        client.create_item(list_id: list_id, name: name)
+        expect(client).to have_received(:authenticate)
+      end
+    end
+
+    describe '#finish_item' do
+      let(:list_id) { 'todo-able-list-uuid' }
+      let(:id) { 'todo-able-list-item-uuid' }
+
+      it 'reauthenticates the client' do
+        allow(client).to receive(:authenticate).and_return(true)
+        client.finish_item(list_id: list_id, id: id)
+        expect(client).to have_received(:authenticate)
+      end
+    end
+
+    describe '#delete_item' do
+      let(:list_id) { 'todo-able-list-uuid' }
+      let(:id) { 'todo-able-list-item-uuid' }
+
+      it 'reauthenticates the client' do
+        allow(client).to receive(:authenticate).and_return(true)
+        client.delete_item(list_id: list_id, id: id)
+        expect(client).to have_received(:authenticate)
+      end
+    end
+  end
+
   context 'with an authenticated client' do
     let(:username) { 'username' }
     let(:password) { 'password' }

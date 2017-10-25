@@ -6,7 +6,7 @@ require 'todoable/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'todoable-sb'
-  spec.version       = Todoable::Sb::VERSION
+  spec.version       = Todoable::VERSION
   spec.authors       = ['Sam Bauch']
   spec.email         = ['sbauch@gmail.com']
 
@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'simplecov', '~> 0.15.1'
   spec.add_development_dependency 'sinatra', '~> 2.0.0'
+  spec.add_development_dependency 'timecop', '~> 0.9.1'
   spec.add_development_dependency 'webmock', '~> 3.1.0'
   spec.add_dependency 'httparty', '~> 0.15.6'
 end

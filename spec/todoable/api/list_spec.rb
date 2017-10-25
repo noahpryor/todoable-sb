@@ -59,30 +59,43 @@ describe Todoable::Api::List do
     let(:username) { 'username' }
     let(:password) { 'password' }
     let(:client) do
-      Todoable::Client.new(username: username, password: password)
+      Todoable::Client.build(username: username, password: password)
+    end
+
+    before do
+      client # else client won't be initialized until "the future"
+      Timecop.freeze(Time.now + (20 * 60)) # advance 20 minutes
+    end
+
+    after do
+      Timecop.return
     end
 
     describe '#lists' do
-      it 'raises a Todoable::NotAuthenticated error' do
-        expect { client.lists }.to raise_error(Todoable::NotAuthenticated)
+      it 'reauthenticates the client' do
+        allow(client).to receive(:authenticate).and_return(true)
+        client.lists
+        expect(client).to have_received(:authenticate)
       end
     end
 
     describe '#find_list' do
       let(:list_id) { 'todo-able-list-uuid' }
 
-      it 'raises a Todoable::NotAuthenticated error' do
-        expect { client.find_list(list_id) }
-          .to raise_error(Todoable::NotAuthenticated)
+      it 'reauthenticates the client' do
+        allow(client).to receive(:authenticate).and_return(true)
+        client.find_list(list_id)
+        expect(client).to have_received(:authenticate)
       end
     end
 
     describe '#create_list' do
       let(:name) { 'New List' }
 
-      it 'raises a Todoable::NotAuthenticated error' do
-        expect { client.create_list(name: name) }
-          .to raise_error(Todoable::NotAuthenticated)
+      it 'reauthenticates the client' do
+        allow(client).to receive(:authenticate).and_return(true)
+        client.create_list(name: name)
+        expect(client).to have_received(:authenticate)
       end
     end
 
@@ -90,19 +103,20 @@ describe Todoable::Api::List do
       let(:id) { 'todo-able-list-uuid' }
       let(:name) { 'Not Really So Urgent Anymore' }
 
-      it 'raises a Todoable::NotAuthenticated error' do
-        expect do
-          client.update_list(list_id: id, name: name)
-        end.to raise_error(Todoable::NotAuthenticated)
+      it 'reauthenticates the client' do
+        allow(client).to receive(:authenticate).and_return(true)
+        client.update_list(list_id: id, name: name)
+        expect(client).to have_received(:authenticate)
       end
     end
 
     describe '#delete_list' do
       let(:id) { 'todo-able-list-uuid' }
 
-      it 'raises a Todoable::NotAuthenticated error' do
-        expect { client.delete_list(id: id) }
-          .to raise_error(Todoable::NotAuthenticated)
+      it 'reauthenticates the client' do
+        allow(client).to receive(:authenticate).and_return(true)
+        client.delete_list(id: id)
+        expect(client).to have_received(:authenticate)
       end
     end
   end

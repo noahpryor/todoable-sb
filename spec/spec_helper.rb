@@ -4,6 +4,7 @@ require 'todoable'
 require 'rspec'
 require 'webmock/rspec'
 require 'support/mock_todoable'
+require 'timecop'
 require 'simplecov'
 require 'coveralls'
 

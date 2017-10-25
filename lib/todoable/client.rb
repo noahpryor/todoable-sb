@@ -14,7 +14,7 @@ module Todoable
     format :json
     base_uri 'https://todoable.teachable.tech/api'
 
-    attr_reader :token
+    attr_reader :token, :token_expiry
 
     # Create a client with a username and password
     #
@@ -56,6 +56,8 @@ module Todoable
       response = self.class.post('/authenticate', @options)
       check_and_raise_errors(response)
       @token = response.parsed_response['token']
+      # tokens expire after 20 minutes
+      @token_expiry = Time.now + (20 * 60)
       self
     end
 
@@ -79,21 +81,34 @@ module Todoable
 
     private
 
-    attr_writer :username, :password, :options
+    attr_writer :username, :password, :options, :token_expiry
 
+    def token_expired
+      Time.now > @token_expiry
+    end
+
+    # Called before attempting to access Todoable API, will refresh
+    #   token if expired and continue with call
     def check_token
-      return true if @token
-      raise NotAuthenticated
+      raise NotAuthenticated unless @token
+      authenticate if token_expired
     end
 
     def check_and_raise_errors(response)
       case response.code.to_i
+      when 200..300
+        return true
       when 404
         raise ContentNotFoundError
-      when 400...500
+      when 401
         raise UnauthorizedError
-      when 500
-        puts response
+      when 422
+        
+        raise UnprocessableError
+      else
+        raise StandardError.new(
+          "Uknown error. Status code #{respon.code} from Todoable API"
+        )
       end
     end
 
@@ -103,11 +118,13 @@ module Todoable
   end
 
   class ContentNotFoundError < StandardError
+    # Raised when
+  end
+
+  class UnprocessableError < StandardError
   end
 
   class NotAuthenticated < StandardError
   end
 
-  class AuthenticationError < StandardError
-  end
 end
